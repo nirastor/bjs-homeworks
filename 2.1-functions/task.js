@@ -19,34 +19,57 @@ function createEquationMessage(a, b, c) {
     Похоже это будет проще сделать на автозамене через регулярные выражения, а не таким алгоритмом
     */
     
-    if (a !== 0) {
-        if (a === 1) message += 'x²'
-        else message += a + 'x²'
-    }
+    // if (a !== 0) {
+    //     if (a === 1) message += 'x²'
+    //     else message += a + 'x²'
+    // }
 
-    if (b !== 0) {
-        if (b === 1) message += ' + x';
-        else if (b === -1) message += ' - x';
-        else if (b > 0) message += ` + ${b}x`
-        else if (b < 0) message += ` - ${-b}x`
-    }
+    // if (b !== 0) {
+    //     if (b === 1) message += ' + x';
+    //     else if (b === -1) message += ' - x';
+    //     else if (b > 0) message += ` + ${b}x`
+    //     else if (b < 0) message += ` - ${-b}x`
+    // }
 
-    if (c > 0) message += ` + ${c}`;
-    if (c < 0) message += ` - ${-c}`;
+    // if (c > 0) message += ` + ${c}`;
+    // if (c < 0) message += ` - ${-c}`;
+
+
+    // Переписал на регулярных.
+    // Выглядит все равно страшно
+    // Но кажется эта конструкция будет работать на многочлене любой длинны
+
+    let msgEquationLeft = `${a}x² + ${b}x + ${c}`;
+
+    msgEquationLeft = msgEquationLeft.replace(/\+ -/g, '- ') // plus-minus
+        .replace(/\s1x/g, ' x') // not:first k === 1
+        .replace(/^1x/, 'x') // first k === 1
+        .replace(/..\s0$/, '') // last k === 0
+        .replace(/^0x./, '') // first k === 0
+        .replace(/..\s0x/g, '') // not:last:not:first k === 0
+        .replace(/^\s\+\s/, '') //clear start
+        .replace(/^\s-\s/, '-'); //clear start
     
-    message += ' = 0';
+    message += msgEquationLeft + ' = 0';
+    
     return message;
 }
 
 function showSolutionsMessage(a, b, c) {
-    const result = getSolutions(a, b, c);
-    
     // В описании задачи пропущенно '= 0' в правой части уравнения
     console.log(`Вычисляем корни квадратного уравнения ${a}x² + ${b}x + ${c} = 0`);
     
     // Сделал вывод приличнее, чтобы не было такого '7x² + 20x + -3' (плюс-минус)
     // И такого 1x² → x²
     console.log( createEquationMessage(a, b, c) );
+
+    if (a === 0) {
+        console.log("Увы, это не квадратное уравнение");
+        return
+    }
+    
+    const result = getSolutions(a, b, c);
+    
     console.log(`Значение дискриминанта: ${result.D}`);
 
     const roots = result.roots;
@@ -62,9 +85,12 @@ function showSolutionsMessage(a, b, c) {
 showSolutionsMessage(1,2,3);
 showSolutionsMessage(7,20,-3);
 showSolutionsMessage(2,4,2);
-showSolutionsMessage(0,1,2); // плохо показывает в этом случае
+showSolutionsMessage(2,-4,-2);
+showSolutionsMessage(0,1,2); 
 showSolutionsMessage(1,0,1);
 showSolutionsMessage(2,3,0);
+showSolutionsMessage(1,0,0);
+showSolutionsMessage(0,0,-4);
 
 
 // *** TASK 2 ***
