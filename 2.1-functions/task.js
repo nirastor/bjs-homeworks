@@ -10,38 +10,9 @@ function getSolutions(a, b, c) {
 
 // Эта функция не по заданию, я сдедлал вывод уравнения в сроку аккуратнее
 function createEquationMessage(a, b, c) {
-    let message = 'Вычисляем корни квадратного уравнения ';
-
-    /*
-    Пахнет дублированием, но поскольку коэффициентов всего три
-    а случаи все таки чуть-чуть отличаются, то пока оставлю так
-    Интересная задача написать вывод многочлена с произвольным числом коэффициентов в красивую строку
-    Похоже это будет проще сделать на автозамене через регулярные выражения, а не таким алгоритмом
-    */
-    
-    // if (a !== 0) {
-    //     if (a === 1) message += 'x²'
-    //     else message += a + 'x²'
-    // }
-
-    // if (b !== 0) {
-    //     if (b === 1) message += ' + x';
-    //     else if (b === -1) message += ' - x';
-    //     else if (b > 0) message += ` + ${b}x`
-    //     else if (b < 0) message += ` - ${-b}x`
-    // }
-
-    // if (c > 0) message += ` + ${c}`;
-    // if (c < 0) message += ` - ${-c}`;
-
-
-    // Переписал на регулярных.
-    // Выглядит все равно страшно
-    // Но кажется эта конструкция будет работать на многочлене любой длинны
-
-    let msgEquationLeft = `${a}x² + ${b}x + ${c}`;
-
-    msgEquationLeft = msgEquationLeft.replace(/\+ -/g, '- ') // plus-minus
+    const msgText = 'Вычисляем корни квадратного уравнения ';
+    const msgEquationRight = ' = 0';
+    const msgEquationLeft = `${a}x² + ${b}x + ${c}`.replace(/\+ -/g, '- ') // plus-minus
         .replace(/\s1x/g, ' x') // not:first k === 1 || -1
         .replace(/^1x/, 'x') // first k === 1
         .replace(/^-1x/, '-x') // first k === -1
@@ -51,9 +22,7 @@ function createEquationMessage(a, b, c) {
         .replace(/^\s\+\s/, '') //clear start
         .replace(/^\s-\s/, '-'); //clear start
     
-    message += msgEquationLeft + ' = 0';
-    
-    return message;
+    return msgText + msgEquationLeft + msgEquationRight;
 }
 
 function showSolutionsMessage(a, b, c) {
@@ -86,7 +55,9 @@ function showSolutionsMessage(a, b, c) {
 showSolutionsMessage(1,2,3);
 showSolutionsMessage(7,20,-3);
 showSolutionsMessage(2,4,2);
+// много тестов для проверки вывода уравнения
 showSolutionsMessage(2,-4,-2);
+// тут пришлось добавить в основную функцию проверку, что уравнение квадратное
 showSolutionsMessage(0,1,2); 
 showSolutionsMessage(1,0,1);
 showSolutionsMessage(-1,0,1);
@@ -162,3 +133,36 @@ console.log( getPersonData({aaa: 0, bbb: 0}) );
 console.log( getPersonData({aaa: 1, bbb: 1}) );
 console.log( getPersonData({aaa: 1, bbb: 0}) );
 
+
+// архивная версия выводв внешнеговида уравнения
+function createEquationMessage_old(a, b, c) {
+    let message = 'Вычисляем корни квадратного уравнения ';
+
+    /*
+    Пахнет дублированием, но поскольку коэффициентов всего три
+    а случаи все таки чуть-чуть отличаются, то пока оставлю так
+    Интересная задача написать вывод многочлена с произвольным числом коэффициентов в красивую строку
+    Похоже это будет проще сделать на автозамене через регулярные выражения, а не таким алгоритмом
+    */
+
+    // Переписал на регулярных (выше). Выглядит все равно страшно, но должно работать на многочлене любой длинны
+    
+    if (a !== 0) {
+        if (a === 1) message += 'x²'
+        else message += a + 'x²'
+    }
+
+    if (b !== 0) {
+        if (b === 1) message += ' + x';
+        else if (b === -1) message += ' - x';
+        else if (b > 0) message += ` + ${b}x`
+        else if (b < 0) message += ` - ${-b}x`
+    }
+
+    if (c > 0) message += ` + ${c}`;
+    if (c < 0) message += ` - ${-c}`;
+
+    message += ' = 0';
+    
+    return message;
+}
