@@ -42,8 +42,9 @@ function createEquationMessage(a, b, c) {
     let msgEquationLeft = `${a}x² + ${b}x + ${c}`;
 
     msgEquationLeft = msgEquationLeft.replace(/\+ -/g, '- ') // plus-minus
-        .replace(/\s1x/g, ' x') // not:first k === 1
+        .replace(/\s1x/g, ' x') // not:first k === 1 || -1
         .replace(/^1x/, 'x') // first k === 1
+        .replace(/^-1x/, '-x') // first k === -1
         .replace(/..\s0$/, '') // last k === 0
         .replace(/^0x./, '') // first k === 0
         .replace(/..\s0x/g, '') // not:last:not:first k === 0
@@ -88,6 +89,7 @@ showSolutionsMessage(2,4,2);
 showSolutionsMessage(2,-4,-2);
 showSolutionsMessage(0,1,2); 
 showSolutionsMessage(1,0,1);
+showSolutionsMessage(-1,0,1);
 showSolutionsMessage(2,3,0);
 showSolutionsMessage(1,0,0);
 showSolutionsMessage(0,0,-4);
