@@ -122,21 +122,24 @@ class Library {
     findBookBy(key, value) {
         for (let book of this.books) {
             if (book[key] === value) {
-                console.log(book.name);
-                // ВОПРОС вот тут return отдает undefined я не понимаю почему.
-                // Из-за этого не проходит один из тестов
-                return book.name;
+                return book;
             }
         }
         return null;
+    }
 
-        // Найдем все книги по запросу, а не только имя первой попавшейся
-        // let result = [];
-        // for (let book of this.books) {
-        //     if (book[key] === value) result.push(book);
-        // }
-
-        // return result.length ? result : null;
+    // Не по ДЗ но ради интереса. Регистронезависимый поиск по любому полю в книге
+    findAllBook(search) {
+        let result =[];
+        for (let book of this.books) {
+            for (let key in book) {
+                if (book[key].toString().toLowerCase().includes(search.toString().toLowerCase())) {
+                    result.push(book);
+                }
+            }
+        }
+        return result;
+        
     }
 
     giveBookByName(bookName) {
@@ -161,9 +164,17 @@ library.addBook(new NovelBook("Герберт Уэллс", "Машина вре�
 library.addBook(new Magazine("Мурзилка", 1924, 60));
 
 
-console.log('\nТест поиска');
+console.log('\nТест поиска одной книги по свойству и значению');
 console.log(library.findBookBy("name", "Властелин колец")); //null
-console.log(library.findBookBy("releaseDate", 1924).name); //"Мурзилка"
+console.log(library.findBookBy("releaseDate", 1924)); //"[Мурзилка]"
+
+console.log('\nТест регистронезависимого поиска по любому полю');
+console.log('Ищем «19»');
+console.log(library.findAllBook(19)); // 3 книги
+console.log('Ищем «Артур»');
+console.log(library.findAllBook('Артур')); // 1 книги
+console.log('Ищем «ин»');
+console.log(library.findAllBook('ин')); // 2 книги
 
 console.log('\nТест выдачи');
 console.log("Количество книг до выдачи: " + library.books.length); //Количество книг до выдачи: 4
